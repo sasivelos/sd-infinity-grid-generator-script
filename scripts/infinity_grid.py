@@ -179,9 +179,11 @@ def try_init():
     
     # Add extension options if those extensions are installed and enabled
     
+    # DynamicThresholding extension
     try:
         script_list = [x for x in scripts.scripts_data if x.script_class.__module__ == "dynamic_thresholding.py"][:1]
         if len(script_list) == 1:
+            print("[INFINITY GRID] Adding extension: DynamicThresholding")
             dynamic_thresholding = script_list[0].module
             registerMode("[DynamicThreshold] Enable", GridSettingMode(dry=True, type="boolean", apply=apply_field("dynthres_enabled")))
             registerMode("[DynamicThreshold] Mimic Scale", GridSettingMode(dry=True, type="decimal", min=0, max=500, apply=apply_field("dynthres_mimic_scale")))
@@ -196,8 +198,15 @@ def try_init():
             registerMode("[DynamicThreshold] Variability Measure", GridSettingMode(dry=True, type="text", apply=apply_field("dynthres_variability_measure"), valid_list=lambda: list(['STD', 'AD'])))
             registerMode("[DynamicThreshold] Interpolate Phi", GridSettingMode(dry=True, type="decimal", min=0, max=1, apply=apply_field("dynthres_interpolate_phi")))
             registerMode("[DynamicThreshold] Separate Feature Channels", GridSettingMode(dry=True, type="boolean", apply=apply_field("dynthres_separate_feature_channels")))
+    except Exception as e:
+        print(f"Infinity Grid Generator failed to import a dependency module: {e}")
+        pass
+    
+    # ControlNet extension
+    try:
         script_list = [x for x in scripts.scripts_data if x.script_class.__module__ == "controlnet.py"][:1]
         if len(script_list) == 1:
+            print("[INFINITY GRID] Adding extension: ControlNet")
             # Hacky but works
             module = script_list[0].module
             preprocessors_list = list(p.name for p in module.Preprocessor.get_sorted_preprocessors())
