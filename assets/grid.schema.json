@@ -33,7 +33,7 @@
             "type": "object",
             "patternProperties": {
                 ".*": {
-                    "$ref": "#/definitions/Axis" 
+                    "$ref": "#/definitions/Axis"
                 }
             },
             "title": "Axes"
@@ -124,6 +124,33 @@
                 "format": {
                     "type": "string",
                     "enum": ["png", "jpg", "webp"]
+                },
+                "stylesheet": {
+                    "type": "string"
+                },
+                "skip_invalid": {
+                    "type": "boolean"
+                },
+                "show descriptions": {
+                    "type": "boolean"
+                },
+                "autoscale": {
+                    "type": "boolean"
+                },
+                "sticky": {
+                    "type": "boolean"
+                },
+                "x axis": {
+                    "type": "string"
+                },
+                "y axis": {
+                    "type": "string"
+                },
+                "x super axis": {
+                    "type": "string"
+                },
+                "y super axis": {
+                    "type": "string"
                 }
             },
             "required": [
