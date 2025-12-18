@@ -121,10 +121,12 @@ def apply_setting_override(name: str):
 has_inited = False
 
 def try_init():
+    # Only initialize once
     global has_inited
     if has_inited:
         return
     has_inited = True
+
     core.grid_call_init_hook = a1111_grid_call_init_hook
     core.grid_call_param_add_hook = a1111_grid_call_param_add_hook
     core.grid_call_apply_hook = a1111_grid_call_apply_hook
@@ -133,6 +135,7 @@ def try_init():
     core.grid_runner_post_dry_hook = a1111_grid_runner_post_dry_hook
     core.grid_runner_count_steps = a1111_grid_runner_count_steps
     core.webdata_get_base_param_data = a1111_webdata_get_base_param_data
+
     registerMode("Model", GridSettingMode(dry=False, type="text", apply=apply_model, clean=clean_model, valid_list=lambda: list(map(lambda m: m.title, sd_models.checkpoints_list.values()))))
     registerMode("VAE", GridSettingMode(dry=False, type="text", apply=apply_vae, clean=clean_vae, valid_list=lambda: list(sd_vae.vae_dict.keys()) + ['none', 'auto', 'automatic']))
     registerMode("Sampler", GridSettingMode(dry=True, type="text", apply=apply_field("sampler_name"), valid_list=lambda: list(sd_samplers.all_samplers_map.keys())))
@@ -173,6 +176,9 @@ def try_init():
     registerMode("HighRes Checkpoint", GridSettingMode(dry=False, type="text", apply=apply_field("hr_checkpoint_name"), clean=clean_model, valid_list=lambda: list(map(lambda m: m.title, sd_models.checkpoints_list.values()))))
     registerMode("Image CFG Scale", GridSettingMode(dry=True, type="decimal", min=0, max=500, apply=apply_field("image_cfg_scale")))
     registerMode("Use Result Index", GridSettingMode(dry=True, type="integer", min=0, max=500, apply=apply_field("inf_grid_use_result_index")))
+    
+    # Add extension options if those extensions are installed and enabled
+    
     try:
         script_list = [x for x in scripts.scripts_data if x.script_class.__module__ == "dynamic_thresholding.py"][:1]
         if len(script_list) == 1:
